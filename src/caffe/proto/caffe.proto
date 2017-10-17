@@ -405,7 +405,78 @@ message LayerParameter {
   optional ThresholdParameter threshold_param = 128;
   optional TileParameter tile_param = 138;
   optional WindowDataParameter window_data_param = 129;
+//-------------------------------------------------------------------
+  // copy from Caffe_mx2: https://github.com/sciencefans/CaffeMex_v2
+  optional BatchPoolParameter batch_pool_param = 111490;
+  optional CenterLossParameter center_loss_param = 111491;
+  optional SmoothL1LossParameter smooth_l1_loss_param = 111492;
+  optional NormalizationParameter normalization_param = 111493;
+  optional NormalizeParameter normalize_param = 111494;
+  optional TripletLossParameter triplet_loss_param = 111495;
+//**********copy from  https://github.com/rksltnl/Deep-Metric-Learning-CVPR16
+  optional LiftedStructSimilaritySoftmaxLossParameter lifted_struct_sim_softmax_loss_param = 111496;
+//**********copy from  https://github.com/PkuRainBow/Hard-Aware-Deeply-Cascaded-Embedding_release
+  optional PairFastLossParameter pair_fast_loss_param = 111497;
+//-------------------------------------------------------------------
 }
+
+//-------------------------------------------------------------------
+// copy from Caffe_mx2: https://github.com/sciencefans/CaffeMex_v2
+message CenterLossParameter {
+  optional uint32 num_output = 1; // The number of outputs for the layer
+  optional FillerParameter center_filler = 2; // The filler for the centers
+  // The first axis to be lumped into a single inner product computation;
+  // all preceding axes are retained in the output.
+  // May be negative to index from the end (e.g., -1 for the last axis).
+  optional int32 axis = 3 [default = 1];
+}
+message TripletLossParameter {
+  //margin for negative triplet
+  optional float margin = 1 [default = 1.0];
+}
+message NormalizeParameter {
+  optional float coeff = 1 [default = 1.0];
+}
+message NormalizationParameter {
+    enum Norm {
+      L1 = 1;
+      L2 = 2;
+    }
+    // Specify the Norm to use L1 or L2
+        //L1 for PQAN
+    optional Norm norm = 1 [default = L2];
+}
+message BatchPoolParameter {
+  enum PoolMethod {
+    MAX = 0;
+    AVE = 1;
+    STOCHASTIC = 2;
+  }
+  optional PoolMethod pool = 1 [default = AVE]; // The pooling method
+}
+message SmoothL1LossParameter {
+  // SmoothL1Loss(x) =
+  //   0.5 * (sigma * x) ** 2    -- if x < 1.0 / sigma / sigma
+  //   |x| - 0.5 / sigma / sigma -- otherwise
+  optional float sigma = 1 [default = 1];
+}
+//**********copy from  https://github.com/rksltnl/Deep-Metric-Learning-CVPR16
+message LiftedStructSimilaritySoftmaxLossParameter {
+  optional float margin = 1 [default = 1.0];
+}
+//**********copy from  https://github.com/PkuRainBow/Hard-Aware-Deeply-Cascaded-Embedding_release
+message PairFastLossParameter {
+     optional float margin = 1 [default = 1.0];
+     optional float hard_ratio = 2 [default = 1.0];
+     optional float factor = 3 [default = 10];
+     enum MODE {
+       POS = 0;
+       NEG = 1;
+       BOTH = 2;
+     }
+     optional MODE mode = 4 [default = BOTH];
+}
+//-------------------------------------------------------------------
 
 // Message that stores parameters used to apply transformation
 // to the data layer's data
